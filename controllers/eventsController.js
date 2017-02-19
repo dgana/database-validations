@@ -37,19 +37,35 @@ module.exports = {
   },
 
   create: function (req, res) {
-    var events = new eventsModel({      date: req.body.date,      title: req.body.title,      name: req.body.name,      email: req.body.email
-    })
+    let emailRegex = /\S+@\S+\.\S+/
 
-    events.save(function (err, events) {
-      if (err) {
-        return res.status(500).json({
-          message: 'Error when creating events',
-          error: err
-        })
-      }
-      return res.status(201).json(events)
-    })
-  },
+    // Data Validation!
+    if (!emailRegex.test(req.body.email)) {
+      res.json('Invalid Email Address!')
+    } else if (!req.body.title) {
+      res.json('Please Input the title!')
+    } else if (!req.body.name) {
+      res.json('Please Input the event description!')
+    } else if (!req.body.date) {
+      res.json('Please Input the event schedule!')
+    } else {
+      var events = new eventsModel({
+        date: req.body.date,
+        title: req.body.title,
+        name: req.body.name,
+        email: req.body.email
+      })
+
+      events.save(function (err, events) {
+        if (err) {
+          return res.status(500).json({
+            message: 'Error when creating events',
+            error: err
+          })
+        }
+        return res.status(201).json(events)
+      })
+    }  },
 
   update: function (req, res) {
     var id = req.params.id

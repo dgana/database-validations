@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Event Organizer</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Home</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="#">Home</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="section">
+      <div class="row">
+       <div class="col s12 m8 offset-m2">
+         <div class="card white darken-1">
+           <div id="message">
+
+           </div>
+           <form>
+             <div class="card-content">
+                <div class="row">
+                  <div class="input-field col s6">
+                    <input placeholder="Event Title" id="title" name="title" type="text" class="validate">
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="email" placeholder="Input your email" type="email" class="validate">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <textarea id="name" placeholder="Event description" class="materialize-textarea"></textarea>
+                  </div>
+                </div>
+                <input id="date" type="date" class="datepicker">
+             </div>
+             <div class="card-action">
+               <button id="submit_event" class="waves-effect waves-light btn"><i class="material-icons left">input</i>Submit Event</button>
+             </div>
+           </form>
+         </div>
+       </div>
+     </div>
+    </div>
+  </div>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('.datepicker').pickadate({
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    $('#name').trigger('autoresize');
+  })
+
+  $('#submit_event').click(function(e){
+    e.preventDefault()
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3000/api/events',
+      dataType: 'json',
+      data: {
+        date: $('#date').val(),
+        name: $('#name').val(),
+        email: $('#email').val(),
+        title: $('#title').val()
+      },
+      success: function(data) {
+        console.log(data);
+        if(data.email) {
+          Materialize.toast('Event Successfully Posted!', 4000)
+          // Clear all value
+          $('#date').val(''),
+          $('#name').val(''),
+          $('#email').val(''),
+          $('#title').val('')
+        } else {
+          Materialize.toast(data, 4000)
+        }
+
+      }
+    })
+  })
+  </script>
+  </body>
+</html>
