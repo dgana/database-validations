@@ -7,14 +7,14 @@ var eventsModel = require('../models/eventsModel.js')
  */
 module.exports = {
   list: function (req, res) {
-    eventsModel.find(function (err, eventss) {
+    eventsModel.find(function (err, events) {
       if (err) {
         return res.status(500).json({
           message: 'Error when getting events.',
           error: err
         })
       }
-      return res.json(eventss)
+      return res.json(events)
     })
   },
 
